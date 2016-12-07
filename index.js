@@ -13,7 +13,9 @@ function Workbook(sheets){
 	});
 
 	// what kind of argument did we get?
-	if(type(sheets) === "String"){
+	if(sheets === void(0)){
+		this.sheets = [];
+	} else if(type(sheets) === "String"){
 		// string, treat as filename and try to open
 		var name = sheets;
 
