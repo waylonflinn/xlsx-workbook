@@ -6,7 +6,11 @@ var xlsx = require('xlsx');
 function type(obj) { return Object.prototype.toString.call(obj).slice(8, -1);}
 
 function Workbook(sheets){
-	this.sheets = [];
+
+	Object.defineProperty(this, "sheets", {
+		"enumerable" : false,
+		"value" : []
+	});
 
 	// what kind of argument did we get?
 	if(type(sheets) === "String"){
@@ -103,10 +107,18 @@ Workbook.prototype.objectify = function(){
 	return wb;
 }
 
+function fixName(name){
+
+	name = name.replace(/(^\W+)|(\W+$)/g, '');
+	name = name.replace(/\W+/g, '-');
+
+	return name;
+}
+
 Workbook.prototype.save = function(name){
 
 	if(this.sheets.length > 0){
-		name = name || this.sheets[0].name;
+		name = name || fixName(this.sheets[0].name);
 	}
 
 	wb = this.objectify();
@@ -121,10 +133,19 @@ Workbook.prototype.push = Workbook.prototype.add;
 var DEFAULT_ROWS = 100000;
 
 function Worksheet(name, rows){
-	this.name = name;
+
 	rows = rows || DEFAULT_ROWS;
 
-	this.data = [];
+	Object.defineProperty(this, "name", {
+		"enumerable" : false,
+		"value" : name
+	});
+
+	Object.defineProperty(this, "data", {
+		"enumerable" : false,
+		"value" : []
+	});
+
 
 	var self = this;
 	for(var R = 0; R < rows; R++){
