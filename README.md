@@ -1,1 +1,1 @@
-A simple, friendly interface for xslx
+A simple, friendly interface for [xslx](https://github.com/SheetJS/js-xlsx)
