@@ -179,9 +179,25 @@ function Worksheet(name, rows){
 
 
 	var self = this;
-	for(var R = 0; R <= rows; R++){
-		this.data[R] = [];
-		addRowProperty(this, R);
+	if(type(rows) === "Array"){
+		var r = Math.max(DEFAULT_ROWS, rows.length)
+
+		for(var R = 0; R < r; R++){
+			if(R < rows.length && type(rows[R]).endsWith("Array")){
+				this.data[R] = rows[R];
+
+				this.length = (R + 1);
+			} else {
+				this.data[R] = [];
+			}
+			addRowProperty(this, R);
+		}
+
+	} else {
+		for(var R = 0; R < rows; R++){
+			this.data[R] = [];
+			addRowProperty(this, R);
+		}
 	}
 }
 
