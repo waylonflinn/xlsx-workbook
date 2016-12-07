@@ -54,6 +54,6 @@ for(i = 0; i < sales[0].length; i++){
 	profits[0][i] = sales[0][i] - costs[0][i];
 }
 
-wb.save("Revenue-Summary.xlsx");
+wb.save("Revenue-Summary");
 
 ```
