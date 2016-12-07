@@ -31,6 +31,19 @@ function Workbook(sheets){
 		// treat it as a worksheet object
 		this.sheets[0] = sheets;
 	}
+
+	var name;
+	for(var i = 0; i < this.sheets.length; i++){
+		name = this.sheets[i].name;
+		addSheetProperty(this, name);
+	}
+}
+
+function addSheetProperty(wb, S){
+	Object.defineProperty(wb, S, {
+		"enumerable" : true,
+		"value" : wb.sheets[S]
+	});
 }
 
 /* turn an xslx workbook into a Workbook object */
@@ -113,9 +126,18 @@ function Worksheet(name, rows){
 
 	this.data = [];
 
+	var self = this;
 	for(var R = 0; R < rows; R++){
 		this.data[R] = [];
+		addRowProperty(this, R);
 	}
+}
+
+function addRowProperty(ws, R){
+	Object.defineProperty(ws, R, {
+		"enumerable" : true,
+		"value" : ws.data[R]
+	});
 }
 
 /* turn a Worksheet object into something xlsx can understand */
