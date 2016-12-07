@@ -2,7 +2,7 @@ A simple, friendly interface for [xslx](https://github.com/SheetJS/js-xlsx), tha
 
 Creating a new spreadsheet and adding a little data is easy.
 
-```
+```javascript
 // the Worksheet object gives you a simple interface to a single sheet
 var Worksheet = require('xlsx-workbook').Worksheet;
 
@@ -16,7 +16,7 @@ var workbook = worksheet.save();
 
 
 Creating a workbook with multiple sheets is a snap!
-```
+```javascript
 // the Workbook object gives you more control and stores multiple sheets
 var Workbook = require('xlsx-workbook').Workbook;
 
@@ -41,7 +41,7 @@ wb.save("Revenue-Summary");
 ```
 
 Editing existing workbooks is easy too!
-```
+```javascript
 var Workbook = require('xlsx-workbook').Workbook;
 
 // looks for a file with a '.xlsx' extension
