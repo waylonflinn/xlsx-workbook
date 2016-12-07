@@ -1,8 +1,6 @@
-
-/*	A simple object wrapper around the xlsx library
-	adapted directly from http://sheetjs.com/demos/writexlsx.html
- */
 var xlsx = require('xlsx');
+
+/* initial code from http://sheetjs.com/demos/writexlsx.html */
 
 // simple type function that works for arrays
 function type(obj) { return Object.prototype.toString.call(obj).slice(8, -1);}
@@ -13,22 +11,29 @@ function Workbook(sheets){
 	// what kind of argument did we get?
 	if(type(sheets) === "String"){
 		// string, treat as filename and try to open
-		var wb = xlsx.readFile(sheets);
+		var name = sheets;
+
+		if(!name.endsWith('.xlsx')) name += ".xlsx";
+
+		var wb = xlsx.readFile(name);
 
 		this.sheets = parse(wb);
 
-	} else if(type(sheets) === "Array]"){
+	} else if(type(sheets) === "Array"){
 		for(var i = 0; i < sheets.length; i++){
 			this.sheets[i] = sheets[i];
 		}
+	} else if(type(sheets) === "Uint8Array"){
+		var wb = xlsx.read(data, {type: 'binary'});
+
+		this.sheets = parse(wb);
 	} else {
 		// treat it as a worksheet object
 		this.sheets[0] = sheets;
 	}
-	//xlsx.read(data, {type: 'binary'});
 }
 
-/* turn an xslx workbook into a Workbook */
+/* turn an xslx workbook into a Workbook object */
 function parse(workbook){
 
 	var ws, name, range;
@@ -56,10 +61,11 @@ Workbook.prototype.add = function(sheet){
 
 	if(typeof sheet == "string"){
 		var name = sheet;
-		this.sheets.push(new Worksheet(name));
-	} else {
-		this.sheets.push(sheet);
+		sheet = new Worksheet(name);
 	}
+	this.sheets.push(sheet);
+
+	return sheet;
 }
 
 /* turn a Workbook object into something xlsx can understand */
@@ -84,7 +90,7 @@ Workbook.prototype.objectify = function(){
 	return wb;
 }
 
-Workbook.prototype.write = function(name){
+Workbook.prototype.save = function(name){
 
 	if(this.sheets.length > 0){
 		name = name || this.sheets[0].name;
@@ -157,9 +163,11 @@ Worksheet.prototype.objectify = function(){
 
 /* create a new workbook containing only this sheet with the same name
  */
-Worksheet.prototype.write = function(){
+Worksheet.prototype.save = function(){
 	var workbook = new Workbook(this);
-	workbook.write();
+	workbook.save();
+
+	return workbook;
 }
 
 module.exports = {
