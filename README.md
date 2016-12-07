@@ -52,7 +52,7 @@ var costs = wb["Costs"];
 
 var profits = wb.add("Profits");
 
-for(i = 0; i < sales[0].length; i++){
+for(i = 0; i < sales.length; i++){
 	profits[i][0] = sales[i][0] - costs[i][0];
 }
 
