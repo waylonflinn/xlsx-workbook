@@ -7,6 +7,8 @@ Creating a new spreadsheet and adding a little data is easy.
 var Worksheet = require('xlsx-workbook').Worksheet;
 
 var worksheet = new Worksheet("Hello Spreadsheet");
+
+// add data using row and column indices on the worksheet object
 worksheet[0][0] = "Hello";
 worksheet[0][1] = "Spreadsheet";
 
@@ -26,12 +28,12 @@ var sales = workbook.add("Sales");
 var costs = workbook.add("Costs");
 
 sales[0][0] = 304.50;
-sales[0][1] = 159.24;
-sales[0][2] = 493.38;
+sales[1][0] = 159.24;
+sales[2][0] = 493.38;
 
 costs[0][0] = 102.50;
-costs[0][1] = 59.14;
-costs[0][2] = 273.32;
+costs[1][0] = 59.14;
+costs[2][0] = 273.32;
 
 // automatically appends the '.xlsx' extension
 workbook.save("Revenue-Summary");
@@ -51,7 +53,7 @@ var costs = wb["Costs"];
 var profits = wb.add("Profits");
 
 for(i = 0; i < sales[0].length; i++){
-	profits[0][i] = sales[0][i] - costs[0][i];
+	profits[i][0] = sales[i][0] - costs[i][0];
 }
 
 wb.save("Revenue-Summary");
