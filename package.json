@@ -1,0 +1,27 @@
+{
+  "name": "xlsx-workbook",
+  "version": "1.0.0",
+  "description": "A simple, friendly interface for xlsx",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waylonflinn/xlsx-workbook.git"
+  },
+  "keywords": [
+    "xlsx",
+    "interface",
+    "excel",
+    "office",
+    "spreadsheet",
+    "xls"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/waylonflinn/xlsx-workbook/issues"
+  },
+  "homepage": "https://github.com/waylonflinn/xlsx-workbook#readme"
+}
