@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/waylonflinn/xlsx-workbook/issues"
   },
-  "homepage": "https://github.com/waylonflinn/xlsx-workbook#readme"
+  "homepage": "https://github.com/waylonflinn/xlsx-workbook#readme",
+  "dependencies": {
+    "xlsx": "^0.8.0"
+  }
 }
