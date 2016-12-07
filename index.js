@@ -9,6 +9,7 @@ function Workbook(sheets){
 
 	Object.defineProperty(this, "sheets", {
 		"enumerable" : false,
+		"writable" : true,
 		"value" : []
 	});
 
@@ -22,7 +23,6 @@ function Workbook(sheets){
 		if(!name.endsWith('.xlsx')) name += ".xlsx";
 
 		var wb = xlsx.readFile(name);
-
 		this.sheets = parse(wb);
 
 	} else if(type(sheets) === "Array"){
@@ -39,16 +39,18 @@ function Workbook(sheets){
 	}
 
 	var name;
+
 	for(var i = 0; i < this.sheets.length; i++){
 		name = this.sheets[i].name;
-		addSheetProperty(this, name);
+		addSheetProperty(this, name, i);
 	}
 }
 
-function addSheetProperty(wb, S){
+function addSheetProperty(wb, S, i){
 	Object.defineProperty(wb, S, {
 		"enumerable" : true,
-		"value" : wb.sheets[S]
+		"writable" : false,
+		"value" : wb.sheets[i]
 	});
 }
 
@@ -58,17 +60,36 @@ function parse(workbook){
 	var ws, name, range;
 	var sheets = [];
 
+	var sheet, cell, c;
+
 	for(var i = 0; i < workbook.SheetNames.length; i++){
 		name = workbook.SheetNames[i];
 		ws = workbook.Sheets[name];
 		range = xlsx.utils.decode_range(ws['!ref']);
 
 		// create new Worksheet object
-		sheets[i] = new Worksheet(name, range.r);
+		sheets[i] = new Worksheet(name, range.e.r);
+
+		sheet = sheets[i];
+		for (z in ws) {
+			/* all keys that do not begin with "!" correspond to cell addresses */
+			if(z[0] === '!') continue;
+
+			cell = ws[z];
+			c = xlsx.utils.decode_cell(z);
+
+			sheet[c.r][c.c] = cell.v;
+
+		}
 
 		// copy data
-		sheets[i]
-
+		/*
+		for(var R = range.s.r; R < range.e.r; R++){
+			for(var C = range.s.c; C < range.e.c; C++){
+				sheets[R][C] = cell.v;
+			}
+		}
+		*/
 	}
 
 	return sheets;
@@ -140,17 +161,25 @@ function Worksheet(name, rows){
 
 	Object.defineProperty(this, "name", {
 		"enumerable" : false,
+		"writable" : true,
 		"value" : name
 	});
 
 	Object.defineProperty(this, "data", {
 		"enumerable" : false,
+		"writable" : true,
 		"value" : []
+	});
+
+	Object.defineProperty(this, "length", {
+		"enumerable" : false,
+		"writable" : true,
+		"value" : 0
 	});
 
 
 	var self = this;
-	for(var R = 0; R < rows; R++){
+	for(var R = 0; R <= rows; R++){
 		this.data[R] = [];
 		addRowProperty(this, R);
 	}
@@ -159,7 +188,10 @@ function Worksheet(name, rows){
 function addRowProperty(ws, R){
 	Object.defineProperty(ws, R, {
 		"enumerable" : true,
-		"value" : ws.data[R]
+		"get" : function(){
+			if(R >= ws.length) ws.length = (R + 1);
+			return ws.data[R];
+		}
 	});
 }
 
@@ -169,19 +201,19 @@ Worksheet.prototype.objectify = function(){
 	var ws = {};
 
 	// create base range object
-	var range = {s: {c:0, r:0}, e: {c:0, r:this.data.length }};
+	var range = {s: {c:0, r:0}, e: {c:0, r:this.length }};
 
 	// iterate through our dense array
-	for(var R = 0; R != this.data.length; ++R) {
+	for(var R = 0; R != this.length; ++R) {
 		for(var C = 0; C != this.data[R].length; ++C) {
-
-			// update column range, if necessary
-			if(range.e.c < C) range.e.c = C;
 
 			// add data
 			var cell = {v: this.data[R][C] };
 			if(cell.v == null) continue;
 
+			// update column range, if necessary
+			if(range.e.c < C) range.e.c = C;
+			if(range.e.r < R) range.e.r = R;
 
 			// set the type
 			if(typeof cell.v === 'number') cell.t = 'n';
