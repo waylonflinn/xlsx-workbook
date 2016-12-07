@@ -20,23 +20,21 @@ Creating a workbook with multiple sheets is a snap!
 // the Workbook object gives you more control and stores multiple sheets
 var Workbook = require('xlsx-workbook').Workbook;
 
-var wb = new Workbook();
+var workbook = new Workbook();
 
-wb.add("Sales");
-wb.add("Costs");
+var sales = workbook.add("Sales");
+var costs = workbook.add("Costs");
 
-var sales = wb["Sales"];
 sales[0][0] = 304.50;
 sales[0][1] = 159.24;
 sales[0][2] = 493.38;
 
-var costs = wb["Costs"];
-sales[0][0] = 102.50;
-sales[0][1] = 59.14;
-sales[0][2] = 273.32;
+costs[0][0] = 102.50;
+costs[0][1] = 59.14;
+costs[0][2] = 273.32;
 
 // automatically appends the '.xlsx' extension
-wb.save("Revenue-Summary");
+workbook.save("Revenue-Summary");
 
 ```
 
