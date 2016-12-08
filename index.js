@@ -207,6 +207,14 @@ function addRowProperty(ws, R){
 		"get" : function(){
 			if(R >= ws.length) ws.length = (R + 1);
 			return ws.data[R];
+		},
+		"set" : function(value){
+			if(R >= ws.length) ws.length = (R + 1);
+
+			if(type(value).endsWith("Array"))
+				ws.data[R] = value.slice();
+			else
+				ws.data[R] = [value];
 		}
 	});
 }
