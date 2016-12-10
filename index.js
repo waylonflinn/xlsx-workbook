@@ -1,9 +1,18 @@
-var xlsx = require('xlsx');
+var xlsx = require('xlsx'),
+	path = require('path');
 
 /* initial code from http://sheetjs.com/demos/writexlsx.html */
 
 // simple type function that works for arrays
 function type(obj) { return Object.prototype.toString.call(obj).slice(8, -1);}
+
+function fixExtension(filename){
+	var ext = path.extname(filename);
+
+	if(ext === '.xlsx') return filename;
+
+	return filename.slice(0, -ext.length) + '.xlsx';
+}
 
 function Workbook(sheets){
 
@@ -20,7 +29,7 @@ function Workbook(sheets){
 		// string, treat as filename and try to open
 		var name = sheets;
 
-		if(!name.endsWith('.xlsx')) name += ".xlsx";
+		name = fixExtension(name);
 
 		var wb = xlsx.readFile(name);
 		this.sheets = parse(wb);
@@ -144,10 +153,11 @@ Workbook.prototype.save = function(name){
 		name = name || fixName(this.sheets[0].name);
 	}
 
+	var filename = fixExtension(name);
+
 	wb = this.objectify();
 
-	var filename = name  + ".xlsx";
-
+	// "xlsx" or "xlsm"
 	xlsx.writeFile(wb, filename, {bookType:'xlsx', bookSST:true, type: 'binary'});
 }
 
@@ -264,9 +274,9 @@ Worksheet.prototype.objectify = function(){
 
 /* create a new workbook containing only this sheet with the same name
  */
-Worksheet.prototype.save = function(){
+Worksheet.prototype.save = function(name){
 	var workbook = new Workbook(this);
-	workbook.save();
+	workbook.save(name);
 
 	return workbook;
 }
