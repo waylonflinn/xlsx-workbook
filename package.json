@@ -25,6 +25,6 @@
   },
   "homepage": "https://github.com/waylonflinn/xlsx-workbook#readme",
   "dependencies": {
-    "xlsx": "^0.8.0"
+    "xlsx": "protobi/js-xlsx"
   }
 }

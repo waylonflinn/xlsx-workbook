@@ -240,24 +240,31 @@ Worksheet.prototype.objectify = function(){
 	// iterate through our dense array
 	for(var R = 0; R != this.length; ++R) {
 		for(var C = 0; C != this.data[R].length; ++C) {
-
-			// add data
-			var cell = {v: this.data[R][C] };
-			if(cell.v == null) continue;
-
-			// update column range, if necessary
-			if(range.e.c < C) range.e.c = C;
-			if(range.e.r < R) range.e.r = R;
-
-			// set the type
-			if(typeof cell.v === 'number') cell.t = 'n';
-			else if(typeof cell.v === 'boolean') cell.t = 'b';
-			else if(cell.v instanceof Date) {
-				cell.t = 'n'; cell.z = xlsx.SSF._table[14];
-				cell.v = datenum(cell.v);
+			var data = this.data[R][C];
+			if(data == null) {
+				continue;
 			}
-			else cell.t = 's';
+			var cell;
+			if(typeof data === 'object') {
+				cell = data;
+			}
+			else {
+				// convert & add data
+				cell = {v: data };
 
+				// update column range, if necessary
+				if(range.e.c < C) range.e.c = C;
+				if(range.e.r < R) range.e.r = R;
+
+				// set the type
+				if(typeof cell.v === 'number') cell.t = 'n';
+				else if(typeof cell.v === 'boolean') cell.t = 'b';
+				else if(cell.v instanceof Date) {
+					cell.t = 'n'; cell.z = xlsx.SSF._table[14];
+					cell.v = datenum(cell.v);
+				}
+				else cell.t = 's';
+			}
 			// generate encoded location
 			var cell_ref = xlsx.utils.encode_cell({c:C,r:R});
 

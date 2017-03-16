@@ -57,5 +57,17 @@ for(i = 0; i < sales.length; i++){
 }
 
 wb.save("Revenue-Summary");
+```
+
+For more control, you can write the underlying cells directly:
+
+```javascript
+
+// write cell with "Hello" in orange
+worksheet[0][0] = {v: "Hello", t: "s", s: {
+  font: {color: {rgb: "FFFFAA00" }}}};
 
 ```
+Make sure you set at least the "v" and "t" attributes. Refer
+to [the description](https://github.com/protobi/js-xlsx/tree/master#cell-styles) for information about style
+objects, keyed by "s" in the cell hash.
