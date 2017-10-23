@@ -106,11 +106,11 @@ function parse(workbook){
 
 /* add an existing sheet to the Workbook or create a new one with the given name
  */
-Workbook.prototype.add = function(sheet){
+Workbook.prototype.add = function(sheet, rows){
 
 	if(typeof sheet == "string"){
 		var name = sheet;
-		sheet = new Worksheet(name);
+		sheet = new Worksheet(name, rows);
 	}
 	this.sheets.push(sheet);
 
