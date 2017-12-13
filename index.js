@@ -6,6 +6,12 @@ var xlsx = require('xlsx'),
 // simple type function that works for arrays
 function type(obj) { return Object.prototype.toString.call(obj).slice(8, -1);}
 
+function datenum(v, date1904) {
+	var epoch = v.getTime();
+	if(date1904) epoch += 1462*24*60*60*1000;
+	return (epoch + 2209161600000) / (24 * 60 * 60 * 1000);
+}
+
 function fixExtension(filename){
 	var ext = path.extname(filename);
 
