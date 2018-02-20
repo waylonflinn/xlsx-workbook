@@ -77,7 +77,7 @@ function parse(workbook){
 		range = xlsx.utils.decode_range(ws['!ref']);
 
 		// create new Worksheet object
-		sheets[i] = new Worksheet(name, range.e.r);
+		sheets[i] = new Worksheet(name, range.e.r + 1); // add one line when excel file is manual modified
 
 		sheet = sheets[i];
 		for (z in ws) {
